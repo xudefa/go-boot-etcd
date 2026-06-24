@@ -25,4 +25,4 @@ require (
 	google.golang.org/protobuf v1.36.11 // indirect
 )
 
-require github.com/xudefa/go-boot v1.0.2
+require github.com/xudefa/go-boot v1.0.4

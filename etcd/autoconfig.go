@@ -10,8 +10,6 @@ import (
 	"strings"
 	"time"
 
-	etcdcore "github.com/xudefa/go-boot-etcd"
-
 	"github.com/xudefa/go-boot/boot"
 	"github.com/xudefa/go-boot/condition"
 	"github.com/xudefa/go-boot/config"
@@ -30,7 +28,7 @@ func init() {
 
 // etcdConfigCenterFactory Etcd 配置中心工厂函数
 func etcdConfigCenterFactory(ctx context.Context, cfg *config.ConfigCenterConfig) (config.ConfigCenter, error) {
-	return etcdcore.NewEtcdConfigCenter(cfg)
+	return NewEtcdConfigCenter(cfg)
 }
 
 // EtcdAutoConfiguration etcd 注册中心的自动配置。
@@ -52,7 +50,7 @@ func (e *EtcdAutoConfiguration) Configure(ctx boot.ApplicationContext) error {
 			Group:     env.GetString("etcd.config-center.group", "DEFAULT_GROUP"),
 			Prefix:    env.GetString("etcd.config-center.prefix", "/config"),
 		}
-		center, err := etcdcore.NewEtcdConfigCenter(cfg)
+		center, err := NewEtcdConfigCenter(cfg)
 		if err != nil {
 			return fmt.Errorf("create etcd config center failed: %w", err)
 		}
@@ -64,10 +62,10 @@ func (e *EtcdAutoConfiguration) Configure(ctx boot.ApplicationContext) error {
 	endpointsStr := env.GetString("etcd.endpoints", "localhost:2379")
 	endpoints := strings.Split(endpointsStr, ",")
 
-	reg, err := etcdcore.NewEtcdRegistry(
-		etcdcore.WithEndpoints(endpoints...),
-		etcdcore.WithPrefix(env.GetString("etcd.prefix", "/services")),
-		etcdcore.WithContainer(ctx.Container()),
+	reg, err := NewEtcdRegistry(
+		WithEndpoints(endpoints...),
+		WithPrefix(env.GetString("etcd.prefix", "/services")),
+		WithContainer(ctx.Container()),
 	)
 	if err != nil {
 		return err
